@@ -15,6 +15,7 @@ class Cliente(models.Model):
     nombre = models.CharField(max_length=45)
     email = models.CharField(max_length=45, unique=True)
     telefono = models.CharField(max_length=15)
+    usuario_asociado = models.CharField(max_length=45, blank=True, null=True)
     
     def __str__(self):
         return f"{self.numero_cliente} - {self.nombre}"
@@ -28,6 +29,7 @@ class Contrato(models.Model):
     fecha_fin = models.DateField()
     estado = models.CharField(max_length=20, choices=ESTADO_CHOICES, default='Activo')
     numero_contrato = models.CharField(max_length=45, unique=True)
+    cliente_numero = models.CharField(max_length=45, blank=True, null=True)
 
     def __str__(self):
         return f"Contrato {self.numero_contrato} - {self.estado}"
@@ -65,6 +67,7 @@ class Medidor(models.Model):
     estado_medidor = models.CharField(max_length=45, choices=ESTADO_CHOICES, default='Activo')
     imagen_ubicacion = models.URLField(max_length=200, blank=True, null=True)  # Imagen del mapa de ubicación
     imagen_fisica = models.URLField(max_length=200, blank=True, null=True)     # Imagen física del medidor
+    contrato_numero = models.CharField(max_length=45, blank=True, null=True)
 
     def __str__(self):
         return f"Medidor {self.numero_medidor} - {self.ubicacion} ({self.estado_medidor})"
@@ -79,6 +82,7 @@ class Lectura(models.Model):
     consumo_energetico = models.PositiveIntegerField()
     tipo_lectura = models.CharField(max_length=45, choices=TIPO_LECTURA_CHOICES, default='Digital')
     lectura_actual = models.PositiveIntegerField()
+    medidor_numero = models.CharField(max_length=45, blank=True, null=True)
 
     def __str__(self):
         return f"Lectura {self.fecha_lectura} - {self.consumo_energetico} kWh"
@@ -96,6 +100,8 @@ class Boleta(models.Model):
     monto_total = models.PositiveIntegerField()
     consumo_energetico = models.CharField(max_length=45)
     estado = models.CharField(max_length=45, choices=BOLETA_CHOICES, default='Pendiente')
+    lectura_id = models.CharField(max_length=50, blank=True, null=True)       
+    cliente_numero = models.CharField(max_length=45, blank=True, null=True)   
 
     def __str__(self):
         return f"Boleta {self.fecha_emision} - ${self.monto_total} ({self.estado})"
@@ -118,6 +124,7 @@ class Pago(models.Model):
     metodo_pago = models.CharField(max_length=45, choices=METODOPAGO_CHOICES)
     numero_referencia = models.CharField(max_length=45)
     estado_pago = models.CharField(max_length=45, choices=PAGO_CHOICES, default='Pagado')
+    boleta_id = models.CharField(max_length=50, blank=True, null=True)
 
     def __str__(self):
         return f"Pago {self.numero_referencia} - ${self.monto_pagado} ({self.metodo_pago})"

@@ -80,11 +80,11 @@ WSGI_APPLICATION = 'SistemaGestionElectrica.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'bgcvew08vx6wlu7ro2tg', 
-        'USER': 'ujyuja5zqzxyoqqa',     
-        'PASSWORD': '9wETu6o8FBNVc7dJArGZ', 
-        'HOST': 'bgcvew08vx6wlu7ro2tg-mysql.services.clever-cloud.com',  
-        'PORT': '3306',           
+        'NAME': 'bdxppnkt16sfsatxfgih',           # MYSQL_ADDON_DB
+        'USER': 'u7q7g1zfm96pal8c',               # MYSQL_ADDON_USER
+        'PASSWORD': 'NcVtjzTtynNlrFp3lrE4',       # MYSQL_ADDON_PASSWORD
+        'HOST': 'bdxppnkt16sfsatxfgih-mysql.services.clever-cloud.com',  # MYSQL_ADDON_HOST
+        'PORT': '3306',                           # MYSQL_ADDON_PORT
     }
 }
 
