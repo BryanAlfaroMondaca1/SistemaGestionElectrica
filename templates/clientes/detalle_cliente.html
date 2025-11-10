@@ -4,7 +4,7 @@
 {% block page_title %}Detalle de Cliente{% endblock %}
 {% block content %}
 <div class="contenedor-formulario mt-4">
-    <div class="tarjeta-formulario w-100" style="max-width:600px;">
+    <div class="tarjeta-formulario w-100" style="max-width:800px;">
         <div class="encabezado-formulario d-flex align-items-center justify-content-between" style="padding: 18px 25px;">
             <h2 class="mb-0 fs-4">
                 <i class="fas fa-user me-2"></i> Detalle de Cliente
@@ -43,7 +43,85 @@
                     </tr>
                 </tbody>
             </table>
-            <div class="d-flex gap-2">
+
+            <!-- ✅ SECCIÓN DE RELACIONES - NUEVO -->
+            <div class="mt-4 p-3 border rounded">
+                <h5 class="mb-3">
+                    <i class="fas fa-link me-2"></i>Relaciones del Cliente
+                </h5>
+                
+                <!-- Relación 1: Cliente → Usuario -->
+                <div class="mb-3 p-3 border rounded bg-light">
+                    <h6 class="mb-2">👤 Usuario Responsable</h6>
+                    {% if usuario_responsable %}
+                        <p class="mb-1"><strong>Username:</strong> {{ usuario_responsable.username }}</p>
+                        <p class="mb-1"><strong>Rol:</strong> {{ usuario_responsable.rol }}</p>
+                        <p class="mb-0"><strong>Email:</strong> {{ usuario_responsable.email }}</p>
+                    {% else %}
+                        <p class="text-warning mb-0">⚠️ No tiene usuario asociado</p>
+                    {% endif %}
+                </div>
+
+                <!-- Relación 2: Cliente → Medidores -->
+                <div class="mb-3 p-3 border rounded bg-light">
+                    <h6 class="mb-2">📟 Medidores Asociados ({{ medidores_cliente|length }})</h6>
+                    {% if medidores_cliente %}
+                        {% for medidor in medidores_cliente %}
+                        <div class="d-flex justify-content-between align-items-center py-1 px-2 mb-1 bg-white rounded">
+                            <span><strong>{{ medidor.numero_medidor }}</strong> - {{ medidor.ubicacion }}</span>
+                            <span class="badge {% if medidor.estado_medidor == 'Activo' %}bg-success{% else %}bg-warning{% endif %}">
+                                {{ medidor.estado_medidor }}
+                            </span>
+                        </div>
+                        {% endfor %}
+                    {% else %}
+                        <p class="text-warning mb-0">⚠️ No tiene medidores asociados</p>
+                    {% endif %}
+                </div>
+
+                <!-- Relación 3: Cliente → Contratos -->
+                <div class="mb-3 p-3 border rounded bg-light">
+                    <h6 class="mb-2">📄 Contratos ({{ contratos_cliente|length }})</h6>
+                    {% if contratos_cliente %}
+                        {% for contrato in contratos_cliente %}
+                        <div class="d-flex justify-content-between align-items-center py-1 px-2 mb-1 bg-white rounded">
+                            <span><strong>{{ contrato.numero_contrato }}</strong></span>
+                            <span class="badge {% if contrato.estado == 'Activo' %}bg-success{% else %}bg-secondary{% endif %}">
+                                {{ contrato.estado }}
+                            </span>
+                        </div>
+                        {% endfor %}
+                    {% else %}
+                        <p class="text-warning mb-0">⚠️ No tiene contratos asociados</p>
+                    {% endif %}
+                </div>
+
+                <!-- Relación 4: Cliente → Boletas -->
+                <div class="mb-3 p-3 border rounded bg-light">
+                    <h6 class="mb-2">🧾 Boletas ({{ boletas_cliente|length }})</h6>
+                    {% if boletas_cliente %}
+                        {% for boleta in boletas_cliente %}
+                        <div class="d-flex justify-content-between align-items-center py-1 px-2 mb-1 bg-white rounded">
+                            <span>
+                                <strong>${{ boleta.monto_total }}</strong> - 
+                                {{ boleta.fecha_emision }}
+                            </span>
+                            <span class="badge 
+                                {% if boleta.estado == 'Pagado' %}bg-success
+                                {% elif boleta.estado == 'Pendiente' %}bg-warning
+                                {% else %}bg-danger{% endif %}">
+                                {{ boleta.estado }}
+                            </span>
+                        </div>
+                        {% endfor %}
+                    {% else %}
+                        <p class="text-warning mb-0">⚠️ No tiene boletas asociadas</p>
+                    {% endif %}
+                </div>
+            </div>
+            <!-- FIN SECCIÓN RELACIONES -->
+
+            <div class="d-flex gap-2 mt-4">
                 <a href="{% url 'sistemaGestion:editar_cliente' cliente.id %}" class="btn btn-sm btn-outline-secondary">
                     <i class="fas fa-edit me-1"></i> Editar Cliente
                 </a>

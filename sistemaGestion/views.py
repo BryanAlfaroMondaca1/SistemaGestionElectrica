@@ -270,6 +270,23 @@ def detalle_cliente(request, cliente_id):
     
     try:
         cliente = Cliente.objects.get(id=cliente_id)
+        
+        # ✅ CONSULTAS DE RELACIONES - CORREGIDAS
+        # 1. Cliente → Usuario (usuario_asociado)
+        usuario_responsable = Usuario.objects.filter(username=cliente.usuario_asociado).first()
+        
+        # 2. Cliente → Contratos (cliente_numero)  
+        contratos_cliente = Contrato.objects.filter(cliente_numero=cliente.numero_cliente)
+        
+        # 3. Cliente → Boletas (cliente_numero)
+        boletas_cliente = Boleta.objects.filter(cliente_numero=cliente.numero_cliente)
+        
+        # 4. Cliente → Medidores (a través de Contratos)
+        # Primero obtenemos los contratos del cliente
+        contratos_ids = [contrato.numero_contrato for contrato in contratos_cliente]
+        # Luego los medidores de esos contratos
+        medidores_cliente = Medidor.objects.filter(contrato_numero__in=contratos_ids)
+        
     except Cliente.DoesNotExist:
         messages.error(request, 'El cliente no existe')
         return redirect('sistemaGestion:lista_clientes')
@@ -277,7 +294,12 @@ def detalle_cliente(request, cliente_id):
     datos = {
         'username': request.session.get('username'),
         'nombre': request.session.get('nombre'),
-        'cliente': cliente
+        'cliente': cliente,
+        # ✅ DATOS DE RELACIONES
+        'usuario_responsable': usuario_responsable,
+        'medidores_cliente': medidores_cliente,
+        'contratos_cliente': contratos_cliente,
+        'boletas_cliente': boletas_cliente,
     }
     return render(request, 'clientes/detalle_cliente.html', datos)
 
